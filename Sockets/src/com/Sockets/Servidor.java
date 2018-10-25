@@ -3,7 +3,6 @@ package com.Sockets;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Servidor {
 
@@ -12,20 +11,18 @@ public class Servidor {
         ServerSocket servidor = new ServerSocket(12345);
         System.out.println("Sala aberta.");
 
-        Socket cliente = servidor.accept();
+        for (int i = 0; i < 5; i++) {
+            Socket cliente = servidor.accept();
 
-        System.out.println("Nova conexão com o cliente: " + cliente.getInetAddress().getHostAddress());
+            System.out.println(cliente.getInetAddress().getHostAddress() + "entrou.");
 
-        Scanner leitor = new Scanner(cliente.getInputStream());
+            MyRunnable myRunnableCliente = new MyRunnable(cliente);
 
-        while (leitor.hasNextLine()) {
-            System.out.println(cliente.getInetAddress().getHostAddress() + " disse: " + leitor.nextLine());
+            Thread thread = new Thread(myRunnableCliente);
+            thread.start();
         }
 
         System.out.println("Sala fechada.");
-
-        leitor.close();
-        cliente.close();
         servidor.close();
     }
 }
